@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSSH</title>
+</head>
+<body>
+    <div>
+        <p>Create a new term:</p>
+        <form id="form" action="/term" target="_blank">
+            <label for="host">Host:</label>
+            <input type="text" id="host" name="host">
+            <label for="port">Port:</label>
+            <input type="number" id="port" name="port">
+            <label for="user">User:</label>
+            <input type="text" id="user" name="user">
+            <label for="pwd">Password:</label>
+            <input type="text" id="pwd" name="pwd">
+            <input type="submit" value="Connect">
+        </form>
+    </div>
+    <div>
+        <p>List activated terms:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Host</th>
+                    <th>Port</th>
+                    <th>User</th>
+                    <th>Type</th>
+                    <th>Size</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .}}
+                    <tr>
+                        <td>{{ .Id }}</td>
+                        <td>{{ .Host }}</td>
+                        <td>{{ .Port }}</td>
+                        <td>{{ .User }}</td>
+                        <td>{{ .Type }}</td>
+                        <td>{{ .Size }}</td>
+                    </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        const form = document.getElementById('form');
+        form.addEventListener('submit', () => {
+            setTimeout(() => { window.location.reload(); }, 200);
+        });
+    </script>
+</body>
+</html>
