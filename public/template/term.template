@@ -11,11 +11,14 @@
     <title>{{ .Name }}</title>
 </head>
 <body>
-    <div id="terminal"></div>
+    <div class="container">
+      <div id="terminal"></div>
+    </div>
     <script>
       const attachAddon = new AttachAddon.AttachAddon(
           new WebSocket('ws://' + window.location.host + '/conn?term=' + '{{ .Id }}'), { bidirectional: true }) 
       const term = new Terminal({
+          'font-family': '"Lucida Console", "Courier New", monospace',
           'cols': {{ .Cols }},
           'rows': {{ .Rows }}
         });
@@ -23,5 +26,16 @@
       term.open(document.getElementById('terminal'));
       term.focus();
     </script>
+    <style>
+      html, body {
+        height: 100%;
+      }
+      .container {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
 </body>
 </html>

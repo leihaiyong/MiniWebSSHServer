@@ -54,5 +54,17 @@
             setTimeout(() => { window.location.reload(); }, 200);
         });
     </script>
+    <style>
+        table, td, th {
+            border: 1px solid black;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        td {
+            text-align: center;
+        }
+    </style>
 </body>
 </html>
