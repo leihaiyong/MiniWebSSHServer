@@ -27,22 +27,22 @@
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Host</th>
-                    <th>Port</th>
+                    <th>Host:Port</th>
                     <th>User</th>
                     <th>Type</th>
                     <th>Size</th>
+                    <th>Since</th>
                 </tr>
             </thead>
             <tbody>
                 {{range .}}
                     <tr>
                         <td>{{ .Id }}</td>
-                        <td>{{ .Host }}</td>
-                        <td>{{ .Port }}</td>
+                        <td>{{ .Host }}:{{ .Port }}</td>
                         <td>{{ .User }}</td>
                         <td>{{ .Type }}</td>
-                        <td>{{ .Size }}</td>
+                        <td>{{ .Rows }}x{{ .Cols }}</td>
+                        <td>{{ .Since.Format "2006-01-02T15:04:05Z07:00" }}</td>
                     </tr>
                 {{end}}
             </tbody>

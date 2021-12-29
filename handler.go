@@ -10,30 +10,8 @@ import (
 	"golang.org/x/net/websocket"
 )
 
-type termInfo struct {
-	Id   string
-	Type string
-	Size string
-	Host string
-	Port int
-	User string
-}
-
 func listTermHandler(c echo.Context) error {
-	terms := []termInfo{}
-
-	for _, term := range termStore.All() {
-		terms = append(terms, termInfo{
-			Id:   term.Id,
-			Type: term.Type,
-			Size: fmt.Sprintf("%dx%d", term.Cols, term.Rows),
-			Host: term.Host(),
-			Port: term.Port(),
-			User: term.User(),
-		})
-	}
-
-	return c.Render(http.StatusOK, "index.template", terms)
+	return c.Render(http.StatusOK, "index.template", termStore.All())
 }
 
 type newTermReq struct {
@@ -45,14 +23,9 @@ type newTermReq struct {
 	Cols     int    `query:"cols" form:"cols"`
 }
 
-type termSessionInfo struct {
-	Name, Id string
-	Rows     int
-	Cols     int
-}
-
 func newTermHandler(c echo.Context) error {
 	req := new(newTermReq)
+
 	if err := c.Bind(req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
@@ -92,17 +65,11 @@ func newTermHandler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	c.Logger().Infof("Created term: %s - %s", term.Id, term)
+	c.Logger().Infof("Created term: %s", term)
 
 	termStore.Put(term)
 
-	return c.Render(http.StatusOK, "term.template",
-		&termSessionInfo{
-			Name: term.String(),
-			Id:   term.Id,
-			Rows: term.Rows,
-			Cols: term.Cols,
-		})
+	return c.Render(http.StatusOK, "term.template", term)
 }
 
 type connTermReq struct {
@@ -113,6 +80,7 @@ const TermBufferSize = 8192
 
 func connTermHandler(c echo.Context) error {
 	req := new(connTermReq)
+
 	if err := c.Bind(req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
@@ -125,13 +93,13 @@ func connTermHandler(c echo.Context) error {
 
 	websocket.Handler(func(ws *websocket.Conn) {
 		defer func() {
-			c.Logger().Infof("Destroy term: %s - %s", term.Id, term)
+			c.Logger().Infof("Destroy term: %s", term)
 			term.Close()
 			termStore.Remove(term)
 			ws.Close()
 		}()
 
-		c.Logger().Infof("Linking term: %s - %s", term.Id, term)
+		c.Logger().Infof("Linking term: %s", term)
 
 		go func() {
 			b := [TermBufferSize]byte{}

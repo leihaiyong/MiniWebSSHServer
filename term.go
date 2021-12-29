@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"time"
 
 	"github.com/rs/xid"
 	"golang.org/x/crypto/ssh"
@@ -90,6 +91,7 @@ func (t *TermLink) NewTerm(rows, cols int) (*Term, error) {
 		Stderr: stderr,
 		s:      s,
 		t:      t,
+		Since:  time.Now(),
 	}, nil
 }
 
@@ -101,6 +103,7 @@ type Term struct {
 	Stdin          io.WriteCloser
 	Stdout, Stderr io.Reader
 	t              *TermLink
+	Since          time.Time
 }
 
 func (t *Term) Host() string {
@@ -115,8 +118,12 @@ func (t *Term) User() string {
 	return t.t.User
 }
 
+func (t *Term) Name() string {
+	return fmt.Sprintf("%s@%s:%d", t.User(), t.Host(), t.Port())
+}
+
 func (t *Term) String() string {
-	return fmt.Sprintf("%s@%s:%d", t.t.User, t.t.Host, t.t.Port)
+	return fmt.Sprintf("%s-%s", t.Id, t.Name())
 }
 
 func (t *Term) Close() {
