@@ -20,6 +20,7 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 
 func main() {
 	bind := flag.String("bind", "127.0.0.1:8080", "bind address")
+	flag.Parse()
 
 	e := echo.New()
 
