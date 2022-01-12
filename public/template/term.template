@@ -25,7 +25,8 @@
       const fitAddon = new FitAddon.FitAddon()
       const webLinksAddon = new WebLinksAddon.WebLinksAddon()
       const term = new Terminal({
-          'font-family': '"Lucida Console", "Courier New", monospace',
+          'fontFamily': '"Lucida Console", "Courier New", monospace',
+          'fontSize': 16,
           'rows': 40,
           'cols': 80,
         });
