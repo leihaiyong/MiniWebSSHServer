@@ -96,14 +96,15 @@ func (t *TermLink) NewTerm(rows, cols int) (*Term, error) {
 }
 
 type Term struct {
-	s              *ssh.Session
-	Id             string
-	Type           string
-	Rows, Cols     int
-	Stdin          io.WriteCloser
-	Stdout, Stderr io.Reader
-	t              *TermLink
-	Since          time.Time
+	s          *ssh.Session
+	Id         string
+	Type       string
+	Rows, Cols int
+	Stdin      io.WriteCloser `json:"-"`
+	Stdout     io.Reader      `json:"-"`
+	Stderr     io.Reader      `json:"-"`
+	t          *TermLink
+	Since      time.Time
 }
 
 func (t *Term) Host() string {
@@ -120,6 +121,16 @@ func (t *Term) User() string {
 
 func (t *Term) Name() string {
 	return fmt.Sprintf("%s@%s:%d", t.User(), t.Host(), t.Port())
+}
+
+func (t *Term) SetWindowSize(rows, cols int) error {
+	err := t.s.WindowChange(rows, cols)
+	if err != nil {
+		return err
+	}
+	t.Rows = rows
+	t.Cols = cols
+	return nil
 }
 
 func (t *Term) String() string {

@@ -1,6 +1,9 @@
 package main
 
-import "sync"
+import (
+	"errors"
+	"sync"
+)
 
 type TermStore struct {
 	sync.Mutex
@@ -9,27 +12,6 @@ type TermStore struct {
 
 var termStore = &TermStore{
 	terms: map[string]*Term{},
-}
-
-func (store *TermStore) Put(term *Term) {
-	store.Lock()
-	defer store.Unlock()
-
-	store.terms[term.Id] = term
-}
-
-func (store *TermStore) Get(id string) *Term {
-	store.Lock()
-	defer store.Unlock()
-
-	return store.terms[id]
-}
-
-func (store *TermStore) Remove(term *Term) {
-	store.Lock()
-	defer store.Unlock()
-
-	delete(store.terms, term.Id)
 }
 
 func (store *TermStore) All() []*Term {
@@ -42,4 +24,46 @@ func (store *TermStore) All() []*Term {
 	}
 
 	return terms
+}
+
+func (store *TermStore) Add(term *Term) {
+	store.Lock()
+	defer store.Unlock()
+
+	store.terms[term.Id] = term
+}
+
+func (store *TermStore) Del(term *Term, close bool) {
+	store.Lock()
+	defer store.Unlock()
+
+	delete(store.terms, term.Id)
+
+	if close {
+		term.Close()
+	}
+}
+
+func (store *TermStore) Get(id string) (*Term, error) {
+	store.Lock()
+	defer store.Unlock()
+
+	term := store.terms[id]
+	if term == nil {
+		return nil, errors.New("term " + id + " not exist")
+	}
+
+	return term, nil
+}
+
+func (store *TermStore) Do(id string, handler func(term *Term) error) (*Term, error) {
+	store.Lock()
+	defer store.Unlock()
+
+	term := store.terms[id]
+	if term == nil {
+		return nil, errors.New("term " + id + " not exist")
+	}
+
+	return term, handler(term)
 }

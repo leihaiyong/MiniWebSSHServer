@@ -7,37 +7,46 @@
     <link rel="stylesheet" href="css/xterm.css" />
     <script src="js/xterm.js"></script>
     <script src="js/xterm-addon-attach.js"></script>
+    <script src="js/xterm-addon-fit.js"></script>
     <script src="js/xterm-addon-web-links.js"></script>
     <title>{{ .Name }}</title>
+    <style>
+      #terminal {
+        height: calc(100vh - 20px);
+        margin: 10px;
+      }
+    </style>
 </head>
 <body>
-    <div class="container">
-      <div id="terminal"></div>
-    </div>
+    <div id="terminal"></div>
     <script>
       const attachAddon = new AttachAddon.AttachAddon(
-          new WebSocket('ws://' + window.location.host + '/conn?term=' + '{{ .Id }}'), { bidirectional: true });
+          new WebSocket('ws://' + window.location.host + '/term/{{ .Id }}/data'), { bidirectional: true });
+      const fitAddon = new FitAddon.FitAddon()
       const webLinksAddon = new WebLinksAddon.WebLinksAddon()
       const term = new Terminal({
           'font-family': '"Lucida Console", "Courier New", monospace',
-          'cols': {{ .Cols }},
-          'rows': {{ .Rows }}
+          'rows': 40,
+          'cols': 80,
         });
       term.loadAddon(webLinksAddon);
+      term.loadAddon(fitAddon);
       term.loadAddon(attachAddon);
       term.open(document.getElementById('terminal'));
+      term.onResize(({cols, rows}) => {
+        console.log(`Resize to: ${cols}, ${rows}`);
+        fetch('/term/{{ .Id }}/windowsize', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ 'cols': cols, 'rows': rows})
+        })
+        .then(resp => resp.json())
+        .then(term => console.log('Okay', term));
+      })
+      fitAddon.fit();
       term.focus();
     </script>
-    <style>
-      html, body {
-        height: 100%;
-      }
-      .container {
-        display: flex;
-        height: 100%;
-        justify-content: center;
-        align-items: center;
-      }
-    </style>
 </body>
 </html>

@@ -38,7 +38,9 @@ func main() {
 
 	e.GET("/", listTermHandler)
 	e.GET("/term", newTermHandler)
-	e.GET("/conn", connTermHandler)
+	e.POST("/term", createTermHandler)
+	e.GET("/term/:id/data", linkTermDataHandler)
+	e.POST("/term/:id/windowsize", setTermWindowSizeHandler)
 
 	e.Start(*bind)
 }
