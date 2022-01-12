@@ -48,6 +48,18 @@
       })
       fitAddon.fit();
       term.focus();
+      
+      function debounce(f, timeout){
+        let t;
+        return (...args) => {
+            clearTimeout(t);
+            t = setTimeout(() => { f.apply(this, args); }, timeout);
+          };
+      };
+      
+      window.addEventListener('resize', debounce(() => {
+        fitAddon.fit();
+      }, 250));
     </script>
 </body>
 </html>
