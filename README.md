@@ -51,3 +51,8 @@ http://<ip_addr:port>/term?host=127.0.0.1&port=22&user=root&pwd=123
         .then(term => console.log(term))
         .catch(err => console.error(err));
 ```
+
+### Examples
+```
+http://<ip_addr:port>/examples/index.html
+```
