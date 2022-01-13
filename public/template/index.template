@@ -5,6 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebSSH</title>
+    <style>
+        table, td, th {
+            border: 1px solid black;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        td {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <div>
@@ -54,17 +66,5 @@
             setTimeout(() => { window.location.reload(); }, 200);
         });
     </script>
-    <style>
-        table, td, th {
-            border: 1px solid black;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        td {
-            text-align: center;
-        }
-    </style>
 </body>
 </html>

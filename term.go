@@ -96,15 +96,16 @@ func (t *TermLink) NewTerm(rows, cols int) (*Term, error) {
 }
 
 type Term struct {
-	s          *ssh.Session
-	Id         string
-	Type       string
-	Rows, Cols int
-	Stdin      io.WriteCloser `json:"-"`
-	Stdout     io.Reader      `json:"-"`
-	Stderr     io.Reader      `json:"-"`
-	t          *TermLink
-	Since      time.Time
+	s      *ssh.Session
+	Id     string         `json:"id"`
+	Type   string         `json:"type"`
+	Rows   int            `json:"rows"`
+	Cols   int            `json:"cols"`
+	Stdin  io.WriteCloser `json:"-"`
+	Stdout io.Reader      `json:"-"`
+	Stderr io.Reader      `json:"-"`
+	t      *TermLink
+	Since  time.Time `json:"since"`
 }
 
 func (t *Term) Host() string {

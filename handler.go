@@ -18,7 +18,7 @@ type newTermReq struct {
 	Host     string `query:"host" form:"host" json:"host"`
 	Port     int    `query:"port" form:"port" json:"port"`
 	User     string `query:"user" form:"user" json:"user"`
-	Password string `query:"pwd" form:"pwd" json:"password"`
+	Password string `query:"pwd" form:"pwd" json:"pwd"`
 	Rows     int    `query:"rows" form:"rows" json:"rows"`
 	Cols     int    `query:"cols" form:"cols" json:"cols"`
 }

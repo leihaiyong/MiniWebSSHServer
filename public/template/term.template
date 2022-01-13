@@ -22,8 +22,8 @@
     <script>
       const attachAddon = new AttachAddon.AttachAddon(
           new WebSocket('ws://' + window.location.host + '/term/{{ .Id }}/data'), { bidirectional: true });
-      const fitAddon = new FitAddon.FitAddon()
-      const webLinksAddon = new WebLinksAddon.WebLinksAddon()
+      const fitAddon = new FitAddon.FitAddon();
+      const webLinksAddon = new WebLinksAddon.WebLinksAddon();
       const term = new Terminal({
           'fontFamily': '"Lucida Console", "Courier New", monospace',
           'fontSize': 16,
@@ -59,6 +59,7 @@
       
       window.addEventListener('resize', debounce(() => {
         fitAddon.fit();
+        term.focus();
       }, 250));
     </script>
 </body>
