@@ -95,6 +95,14 @@ func (t *TermLink) NewTerm(rows, cols int) (*Term, error) {
 	}, nil
 }
 
+type TermOption struct {
+	Host       string
+	Port       int
+	Username   string
+	Password   string
+	Rows, Cols int
+}
+
 type Term struct {
 	s      *ssh.Session
 	Id     string         `json:"id"`
